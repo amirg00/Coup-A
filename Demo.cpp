@@ -13,7 +13,9 @@
 #include "Contessa.hpp"
 #include "Game.hpp"
 
-//using namespace coup;
+#include <exception>
+
+using namespace coup;
 
 #include <iostream>
 #include <stdexcept>
@@ -57,33 +59,42 @@ int main() {
     contessa.income();
 
     // throws exception, it is duke's turn now
-    //assassin.income();
-
+    try{
+        assassin.income();
+    }catch (const std::exception &e){
+        std::cerr << e.what() << '\n';
+    }
     duke.income();
     assassin.foreign_aid();
 
     // throws exception, the last operation duke performed
     // is income, which cannot be blocked by any role
-    //captain.block(duke);
+    try{
+        captain.block(duke);
+    }catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 
     cout << duke.coins() << endl; // prints 2
     cout << assassin.coins() << endl; // prints 3
 
-    cout << "YADA YADA YADA!" << endl;
-    // throws exception, the last operation duke performed
+    // throws exception, the last operation assassin performed
     // is foreign aid, which cannot be blocked by contessa
-    // contessa.block(assassin);
-
+    try{
+        contessa.block(assassin);
+    }catch (const std::exception &e)
+    {
+        std::cerr << e.what() << '\n';
+    }
 
     duke.block(assassin);
-
     cout << assassin.coins() << endl; // prints 1
-    cout << "--------------" << endl;
 
     ambassador.transfer(duke, assassin); //transfers 1 coin from duke to assassin
-
     captain.foreign_aid();
     contessa.foreign_aid();
+
     duke.tax();
     assassin.income();
     ambassador.foreign_aid();
@@ -93,6 +104,7 @@ int main() {
     duke.tax();
     // no exception, assassin can coup with only 3 coins
     assassin.coup(duke);
+
     players = game_1.players();
     /*
 		prints:
@@ -101,12 +113,10 @@ int main() {
 		Reut
 		Gilad
 	*/
-
     for (string name : players)
     {
         cout << name << endl;
     }
-    cout << "------------------" << endl;
 
     contessa.block(assassin);
 

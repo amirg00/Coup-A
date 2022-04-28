@@ -1,5 +1,5 @@
 #include "Game.hpp"
-
+using namespace coup;
 
 Game::Game() {
     _winner = "";

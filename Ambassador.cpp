@@ -1,4 +1,5 @@
 #include "Ambassador.hpp"
+using namespace coup;
 using std::move;
 
 //Constructor

@@ -1,4 +1,5 @@
 #include "Player.hpp"
+using namespace coup;
 using std::move;
 
 Player::Player(Game& game, string name, string role)

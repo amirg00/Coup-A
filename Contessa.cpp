@@ -1,4 +1,5 @@
 #include "Contessa.hpp"
+using namespace coup;
 using std::move;
 
 //Constructor

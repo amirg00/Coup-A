@@ -1,4 +1,5 @@
 #include "Duke.hpp"
+using namespace coup;
 using std::move;
 
 //Constructor
