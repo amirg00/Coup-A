@@ -10,15 +10,15 @@ _doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALI
 }
 
 void Player::income() {
-    if (!isPlayerTurn()) {throw std::exception();}
-    if (_coins >= 10) {throw std::exception();}
+    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
+    if (_coins >= 10) {throw "ERR: player has 10 coins and didn't perform coup.";}
     increase(1);
     _game.next_turn();
 }
 
 void Player::foreign_aid() {
-    if (!isPlayerTurn()) {throw std::exception();}
-    if (_coins >= 10) {throw std::exception();}
+    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
+    if (_coins >= 10) {throw "ERR: player has 10 coins and didn't perform coup.";}
     /*Set current operation to be double income*/
     _curr_operation = State::FOREIGN_AID;
     increase(2);
@@ -26,7 +26,7 @@ void Player::foreign_aid() {
 }
 
 void Player::coup(Player& target) {
-    if (!isPlayerTurn()) {throw std::exception();}
+    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
     _players = _game.players();
 
     /*Player is assassin*/
