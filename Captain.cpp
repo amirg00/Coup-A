@@ -8,6 +8,7 @@ Captain::Captain(Game& game, string name)
 
 void Captain::steal(Player& target) {
     if (!isPlayerTurn()) {throw std::exception();}
+    if (_coins >= 10) {throw std::exception();}
     if (_stealBlock){
         setStealBlock(false);
         _game.next_turn();

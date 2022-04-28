@@ -27,6 +27,7 @@ public:
     void income();            /* Income = 1 coins */
     void foreign_aid();       /* Doubled income =  2 coins */
     void coup(Player& target);
+    void coupByCoins(Player& target, int coins);
     int coins() const;
     string role() const;
     void increase(int amount);

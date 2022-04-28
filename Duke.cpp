@@ -8,6 +8,7 @@ Duke::Duke(Game& game, string name)
 
 void Duke::tax() {
     if (!isPlayerTurn()) {throw std::exception();}
+    if (_coins >= 10) {throw std::exception();}
     this->increase(3);
     _game.next_turn();
 }

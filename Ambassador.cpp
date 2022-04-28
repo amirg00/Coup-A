@@ -8,6 +8,7 @@ Ambassador::Ambassador(Game& game, string name)
 
 void Ambassador::transfer(Player& from, Player& to) {
     if (!isPlayerTurn()) {throw std::exception();}
+    if (_coins >= 10) {throw std::exception();}
     from.decrease(1);
     to.increase(1);
     _game.next_turn();

@@ -10,16 +10,16 @@ _doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALI
 
 void Player::income() {
     if (!isPlayerTurn()) {throw std::exception();}
+    if (_coins >= 10) {throw std::exception();}
     increase(1);
     _game.next_turn();
 }
 
 void Player::foreign_aid() {
     if (!isPlayerTurn()) {throw std::exception();}
-
+    if (_coins >= 10) {throw std::exception();}
     /*Set current operation to be double income*/
     _curr_operation = State::FOREIGN_AID;
-
     increase(2);
     _game.next_turn();
 }
@@ -27,15 +27,11 @@ void Player::foreign_aid() {
 void Player::coup(Player& target) {
     if (!isPlayerTurn()) {throw std::exception();}
     _players = _game.players();
+
     /*Player is assassin*/
     if (_role == "Assassin"){
         if (_coins >= 3){
-            _curr_operation = State::COUP;
-            decrease(3);
-            _game.remPlayer(target._name);
-            target.setCoup(true);
-            target.setCoupPlayerName(_role);
-            _game.next_turn();
+            coupByCoins(target, 3);
             return;
         }
         else{ /*Player doesn't have enough coins for the operation*/
@@ -47,13 +43,19 @@ void Player::coup(Player& target) {
     if (_coins < 7){  /*Player doesn't have enough coins for the operation*/
         throw std::exception();
     }
+    coupByCoins(target, 7);
+}
+
+//Auxiliary method for the coup method.
+void Player::coupByCoins(Player &target, int coins) {
     _curr_operation = State::COUP;
-    decrease(7);
+    decrease(coins);
     _game.remPlayer(target._name);
     target.setCoup(true);
     target.setCoupPlayerName(_role);
     _game.next_turn();
 }
+
 
 int Player::coins() const {
     return _coins;
