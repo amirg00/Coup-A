@@ -1,6 +1,7 @@
 #include "Player.hpp"
 #include "Game.hpp"
 
+
 namespace coup{
     class Ambassador : public Player{
     public:

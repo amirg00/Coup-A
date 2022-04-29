@@ -1,6 +1,6 @@
 #include "Contessa.hpp"
 using namespace coup;
-using std::move;
+using std::move; using std::runtime_error;
 
 //Constructor
 Contessa::Contessa(Game& game, string name)
@@ -8,7 +8,7 @@ Contessa::Contessa(Game& game, string name)
 {}
 
 void Contessa::block(Player& target) {
-    if (target.getCurrState() != State::COUP) {throw std::exception();}
+    if (target.getCurrState() != State::COUP) {throw runtime_error("ERR: cannot coup - targeted player's turn has already reached.");}
     target.setCoupBlock(true);
     _game.setPlayers(target.getPlayers());
 }

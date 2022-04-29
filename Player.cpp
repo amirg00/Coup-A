@@ -1,6 +1,6 @@
 #include "Player.hpp"
 using namespace coup;
-using std::move;
+using std::move; using std::runtime_error;
 
 Player::Player(Game& game, string name, string role)
 : _game(game), _name(move(name)), _role(move(role)), _coins(0), _coup(false), _coupBlock(false),
@@ -10,15 +10,15 @@ _doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALI
 }
 
 void Player::income() {
-    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
-    if (_coins >= 10) {throw "ERR: player has 10 coins and didn't perform coup.";}
+    if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
+    if (_coins >= 10) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
     increase(1);
     _game.next_turn();
 }
 
 void Player::foreign_aid() {
-    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
-    if (_coins >= 10) {throw "ERR: player has 10 coins and didn't perform coup.";}
+    if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
+    if (_coins >= 10) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
     /*Set current operation to be double income*/
     _curr_operation = State::FOREIGN_AID;
     increase(2);
@@ -26,7 +26,7 @@ void Player::foreign_aid() {
 }
 
 void Player::coup(Player& target) {
-    if (!isPlayerTurn()) {throw "ERR: not player's turn!";}
+    if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
     _players = _game.players();
 
     /*Player is assassin*/
@@ -51,6 +51,7 @@ void Player::coup(Player& target) {
 void Player::coupByCoins(Player &target, int coins) {
     _curr_operation = State::COUP;
     decrease(coins);
+    _game.fixCurrPos(target._name);
     _game.remPlayer(target._name);
     target.setCoup(true);
     target.setCoupPlayerName(_role);
