@@ -115,3 +115,50 @@ TEST_CASE("Player's attack performances"){
     CHECK_NOTHROW(contessa.block(assassin));
     CHECK(game.players().size() == 5); /*Player rejoins the game*/
 }
+
+TEST_CASE("Blocks"){
+    /*Set game and players*/
+    Game game{};
+    Duke duke{game, "Moshe"};
+    Assassin assassin{game, "Yossi"};
+    Ambassador ambassador{game, "Meirav"};
+    Captain captain{game, "Reut"};
+    Contessa contessa{game, "Gilad"};
+
+    CHECK_THROWS(duke.block(assassin));
+    CHECK(game.turn() == "Moshe");
+
+    for (int i = 0; i < 3; ++i) {
+        duke.income();
+        assassin.income();
+        ambassador.income();
+        captain.income();
+        contessa.income();
+    }
+    duke.income();
+
+
+    /*Block coup*/
+    CHECK_NOTHROW(assassin.coup(duke));
+    CHECK(game.players().size() == 4);
+    CHECK(game.turn() == "Meirav"); /*Need to be ambassador's turn after fixing current position*/
+    CHECK_NOTHROW(contessa.block(assassin));
+    CHECK(game.players().size() == 5);
+
+
+    /*Block double income*/
+    ambassador.foreign_aid();
+    CHECK(ambassador.coins() == 5);
+    duke.block(ambassador);
+    CHECK(ambassador.coins() == 3);
+
+    cout << "000000000000000" << endl;
+
+    /*Block steal*/
+    captain.steal(ambassador);
+    CHECK(ambassador.coins() == 1);
+    CHECK(captain.coins() == 5);
+    ambassador.block(captain);
+    CHECK(ambassador.coins() == 3);
+    CHECK(captain.coins() == 3);
+}
