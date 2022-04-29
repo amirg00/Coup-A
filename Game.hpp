@@ -20,6 +20,7 @@ namespace coup{
         string winner();
         void addPlayer(const string& name);
         void remPlayer(const string& name);
+        void fixCurrPos(const string& remPlayerName);
         void setPlayers(const vector<string>& players);
     };
 }

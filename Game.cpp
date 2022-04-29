@@ -32,8 +32,26 @@ void Game::remPlayer(const string &name) {
     _players.erase(remove(_players.begin(), _players.end(), name), _players.end());
 }
 
+/**
+ * Fixes the current position after removing the player with the given name.
+ * @param remPlayerName
+ */
+void Game::fixCurrPos(const string &remPlayerName) {
+    size_t pos = 0;
+    for (size_t i = 0; i < _players.size(); ++i) {
+        if (_players[i] == remPlayerName){
+            pos = i;
+            break;
+        }
+    }
+    cout << "Pos: " << pos << ", Current Pos: " << _curr_turn << endl;
+    if (pos < _curr_turn){_curr_turn--;}
+}
+
 void Game::setPlayers(const vector<string>& players) {
     _players.clear();
     for(const string& player: players){_players.push_back(player);}
 }
+
+
 
