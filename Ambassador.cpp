@@ -9,13 +9,15 @@ Ambassador::Ambassador(Game& game, string name)
 
 void Ambassador::transfer(Player& from, Player& to) {
     if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
-    if (_coins >= 10) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
+    if (_coins >= LIMIT) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
     from.decrease(1);
     to.increase(1);
     _game.next_turn();
 }
 
 void Ambassador::block(Player& target) {
-    if (target.getCurrState() != State::STEAL) {throw runtime_error("ERR: cannot steal - targeted player's turn has already reached.");}
+    if (target.getCurrState() != State::STEAL) {throw runtime_error("ERR: cannot block steal - targeted player's turn has already reached.");}
     target.setStealBlock(true);
+    target.decrease(2);
+    target.getPlayer_ptr().increase(2);
 }
