@@ -4,21 +4,21 @@ using std::move; using std::runtime_error;
 
 Player::Player(Game& game, string name, string role)
 : _game(game), _name(move(name)), _role(move(role)), _coins(0), _coup(false), _coupBlock(false),
-_doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALIZED)
+_doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALIZED), _player_ptr(nullptr)
 {
     _game.addPlayer(_name);
 }
 
 void Player::income() {
     if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
-    if (_coins >= 10) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
+    if (_coins >= LIMIT) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
     increase(1);
     _game.next_turn();
 }
 
 void Player::foreign_aid() {
     if (!isPlayerTurn()) {throw runtime_error("ERR: not player's turn!");}
-    if (_coins >= 10) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
+    if (_coins >= LIMIT) {throw runtime_error("ERR: player has 10 coins and didn't perform coup.");}
     /*Set current operation to be double income*/
     _curr_operation = State::FOREIGN_AID;
     increase(2);
@@ -31,20 +31,22 @@ void Player::coup(Player& target) {
 
     /*Player is assassin*/
     if (_role == "Assassin"){
-        if (_coins >= 3){
-            coupByCoins(target, 3);
+        if (_coins >= COUP_CHARGE){ /*If he has 7 coins then coup is cost 7 coins*/
+            coupByCoins(target, COUP_CHARGE);
             return;
         }
-        else{ /*Player doesn't have enough coins for the operation*/
-            throw std::exception();
+        if (_coins >= ASSASSIN_COUP_CHARGE){ /* If he doesn't have 7 coins but 3, then coup is cost 3 coins instead of 7*/
+            coupByCoins(target, ASSASSIN_COUP_CHARGE);
+            return;
         }
+        /*Player doesn't have enough coins for the operation*/
+        throw runtime_error("ERR: player doesn't have enough coins!");
     }
-
     /*Player isn't assassin*/
-    if (_coins < 7){  /*Player doesn't have enough coins for the operation*/
-        throw std::exception();
+    if (_coins < COUP_CHARGE){  /*Player doesn't have enough coins for the operation*/
+        throw runtime_error("ERR: player doesn't have enough coins!");
     }
-    coupByCoins(target, 7);
+    coupByCoins(target, COUP_CHARGE);
 }
 
 //Auxiliary method for the coup method.
@@ -53,8 +55,11 @@ void Player::coupByCoins(Player &target, int coins) {
     decrease(coins);
     _game.fixCurrPos(target._name);
     _game.remPlayer(target._name);
+    if (_game.players().size() == 1){ /* Check if player is the winner = last remained*/
+        _game.setWinner(_name);
+    }
     target.setCoup(true);
-    target.setCoupPlayerName(_role);
+    target.setCoupPlayerName(_name);
     _game.next_turn();
 }
 
@@ -65,6 +70,10 @@ int Player::coins() const {
 
 string Player::role() const {
     return _role;
+}
+
+string Player::name() const {
+    return _name;
 }
 
 void Player::increase(int amount) {
@@ -127,4 +136,6 @@ vector<string> Player::getPlayers() {
     return _players;
 }
 
-
+Player& Player::getPlayer_ptr() {
+    return *_player_ptr;
+}

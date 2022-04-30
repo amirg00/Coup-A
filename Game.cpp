@@ -15,7 +15,6 @@ string Game::turn() {
 }
 
 void Game::next_turn() {
-    //cout << "Size: " << (int)_players.size() << endl;
     ++_curr_turn;
     _curr_turn %= (int)_players.size();
 }
@@ -37,21 +36,39 @@ void Game::remPlayer(const string &name) {
  * @param remPlayerName
  */
 void Game::fixCurrPos(const string &remPlayerName) {
-    size_t pos = 0;
-    for (size_t i = 0; i < _players.size(); ++i) {
-        if (_players[i] == remPlayerName){
-            pos = i;
-            break;
-        }
-    }
-    cout << "Pos: " << pos << ", Current Pos: " << _curr_turn << endl;
+    int pos = findPlayerPos(remPlayerName);
     if (pos < _curr_turn){_curr_turn--;}
 }
+
+/**
+ * Fixes the current position after returning player with given name back to the game.
+ * @param addPlayerName
+ */
+void Game::fixCurrPosAdd(const string &addPlayerName) {
+    int pos = findPlayerPos(addPlayerName);
+    if (pos < _curr_turn){_curr_turn++;}
+
+}
+
 
 void Game::setPlayers(const vector<string>& players) {
     _players.clear();
     for(const string& player: players){_players.push_back(player);}
 }
+
+int Game::findPlayerPos(const string &PlayerName) {
+    for (size_t i = 0; i < _players.size(); ++i) {
+        if (_players[i] == PlayerName){
+            return (int) i;
+        }
+    }
+    return -1;
+}
+
+void Game::setWinner(const string& winnerName) {
+    _winner = winnerName;
+}
+
 
 
 

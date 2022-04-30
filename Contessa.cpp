@@ -8,7 +8,8 @@ Contessa::Contessa(Game& game, string name)
 {}
 
 void Contessa::block(Player& target) {
-    if (target.getCurrState() != State::COUP) {throw runtime_error("ERR: cannot coup - targeted player's turn has already reached.");}
+    if (target.getCurrState() != State::COUP) {throw runtime_error("ERR: cannot block coup - targeted player's turn has already reached.");}
     target.setCoupBlock(true);
     _game.setPlayers(target.getPlayers());
+    _game.fixCurrPosAdd(target.getCoupPlayerName());
 }

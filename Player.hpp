@@ -1,6 +1,10 @@
 #pragma once
 #include "Game.hpp"
 
+#define LIMIT 10                    // 10 coins and above force player to coup.
+#define COUP_CHARGE 7               // For regular players, coup is cost 7 coins.
+#define ASSASSIN_COUP_CHARGE 3      // For assassin player, coup can cost 3 coins.
+
 namespace coup{
 
     /*States for blocks*/
@@ -24,6 +28,7 @@ namespace coup{
         bool _coupBlock;          /* Flag - indicates if player has been blocked for coup operation*/
         State _curr_operation;    /* States Player's latest operation, which can be blocked*/
         vector<string> _players;  /* Store previous order for players before coup is accomplished*/
+        Player *_player_ptr;      /* Store player's reference in order to return anything after block*/
     public:
         Player(Game& game, string name, string role);
         void income();            /* Income = 1 coins */
@@ -32,6 +37,7 @@ namespace coup{
         void coupByCoins(Player& target, int coins);
         int coins() const;
         string role() const;
+        string name() const;
         void increase(int amount);
         void decrease(int amount);
         bool isPlayerTurn();
@@ -47,5 +53,6 @@ namespace coup{
         void setCoupBlock(bool b);
         State getCurrState();
         vector<string> getPlayers();
+        Player& getPlayer_ptr();
     };
 };
