@@ -182,3 +182,30 @@ TEST_CASE("Winner case"){
     CHECK(assassin.coins() == 0);
     CHECK(game.winner() == "Yossi");
 }
+
+// Test if steals properly whenever target player doesn't have
+// enough coins, meaning: less than 2.
+TEST_CASE("Steal - Insufficient Funds"){
+    /*Set game and players*/
+    Game game{};
+    Captain captain{game, "Reut"};
+    Duke duke{game, "Moshe"};
+    Assassin assassin{game, "Yossi"};
+    Ambassador ambassador{game, "Meirav"};
+    Contessa contessa{game, "Gilad"};
+
+    /*Target player has 0 coins*/
+    CHECK_NOTHROW(captain.steal(duke));
+    CHECK(captain.coins() == 0);
+    CHECK(duke.coins() == 0);
+
+    duke.income();
+    assassin.income();
+    ambassador.income();
+    contessa.income();
+
+    /*Target player has 1 coins*/
+    CHECK_NOTHROW(captain.steal(ambassador));
+    CHECK(captain.coins() == 1);
+    CHECK(ambassador.coins() == 0);
+}

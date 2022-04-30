@@ -18,6 +18,6 @@ void Ambassador::transfer(Player& from, Player& to) {
 void Ambassador::block(Player& target) {
     if (target.getCurrState() != State::STEAL) {throw runtime_error("ERR: cannot block steal - targeted player's turn has already reached.");}
     target.setStealBlock(true);
-    target.decrease(2);
-    target.getPlayer_ptr().increase(2);
+    target.decrease(target.getStealAmount());
+    target.getPlayer_ptr().increase(target.getStealAmount());
 }

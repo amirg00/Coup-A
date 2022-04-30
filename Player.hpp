@@ -4,6 +4,7 @@
 #define LIMIT 10                    // 10 coins and above force player to coup.
 #define COUP_CHARGE 7               // For regular players, coup is cost 7 coins.
 #define ASSASSIN_COUP_CHARGE 3      // For assassin player, coup can cost 3 coins.
+#define STEAL_CHARGE 2              // Steal is usually 2 coins.
 
 namespace coup{
 
@@ -29,6 +30,7 @@ namespace coup{
         State _curr_operation;    /* States Player's latest operation, which can be blocked*/
         vector<string> _players;  /* Store previous order for players before coup is accomplished*/
         Player *_player_ptr;      /* Store player's reference in order to return anything after block*/
+        int _steal_coins;         /* The amount which the player have stolen */
     public:
         Player(Game& game, string name, string role);
         void income();            /* Income = 1 coins */
@@ -54,5 +56,6 @@ namespace coup{
         State getCurrState();
         vector<string> getPlayers();
         Player& getPlayer_ptr();
+        int getStealAmount() const;
     };
 };

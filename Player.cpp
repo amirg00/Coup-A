@@ -3,7 +3,7 @@ using namespace coup;
 using std::move; using std::runtime_error;
 
 Player::Player(Game& game, string name, string role)
-: _game(game), _name(move(name)), _role(move(role)), _coins(0), _coup(false), _coupBlock(false),
+: _game(game), _name(move(name)), _role(move(role)), _coins(0), _coup(false), _coupBlock(false), _steal_coins(0),
 _doubleIncomeBlock(false), _stealBlock(false), _curr_operation(State::UNINITIALIZED), _player_ptr(nullptr)
 {
     _game.addPlayer(_name);
@@ -138,4 +138,8 @@ vector<string> Player::getPlayers() {
 
 Player& Player::getPlayer_ptr() {
     return *_player_ptr;
+}
+
+int Player::getStealAmount() const {
+    return _steal_coins;
 }
