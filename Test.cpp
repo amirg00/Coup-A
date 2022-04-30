@@ -6,7 +6,6 @@
 #include "doctest.h"
 #include <exception>
 using namespace coup;
-
 #include <iostream>
 #include <stdexcept>
 #include <vector>
@@ -116,6 +115,7 @@ TEST_CASE("Player's attack performances"){
     CHECK(game.players().size() == 5); /*Player rejoins the game*/
 }
 
+// Check if players block properly
 TEST_CASE("Blocks"){
     /*Set game and players*/
     Game game{};
@@ -137,7 +137,6 @@ TEST_CASE("Blocks"){
     }
     duke.income();
 
-
     /*Block coup*/
     CHECK_NOTHROW(assassin.coup(duke));
     CHECK(game.players().size() == 4);
@@ -145,20 +144,41 @@ TEST_CASE("Blocks"){
     CHECK_NOTHROW(contessa.block(assassin));
     CHECK(game.players().size() == 5);
 
-
     /*Block double income*/
-    ambassador.foreign_aid();
+    CHECK_NOTHROW(ambassador.foreign_aid());
     CHECK(ambassador.coins() == 5);
-    duke.block(ambassador);
+    CHECK_NOTHROW(duke.block(ambassador));
     CHECK(ambassador.coins() == 3);
-
-    cout << "000000000000000" << endl;
 
     /*Block steal*/
-    captain.steal(ambassador);
+    CHECK_NOTHROW(captain.steal(ambassador));
     CHECK(ambassador.coins() == 1);
     CHECK(captain.coins() == 5);
-    ambassador.block(captain);
+    CHECK_NOTHROW(ambassador.block(captain));
     CHECK(ambassador.coins() == 3);
     CHECK(captain.coins() == 3);
+}
+
+TEST_CASE("Winner case"){
+    /*Set game and players*/
+    Game game{};
+    Duke duke{game, "Moshe"};
+    Assassin assassin{game, "Yossi"};
+    Ambassador ambassador{game, "Meirav"};
+    Captain captain{game, "Reut"};
+    Contessa contessa{game, "Gilad"};
+
+    for (int i = 0; i < 10; ++i) {
+        duke.income();
+        assassin.income();
+        ambassador.income();
+        captain.income();
+        contessa.income();
+    }
+    CHECK_NOTHROW(duke.coup(contessa));
+    CHECK_NOTHROW(assassin.coup(captain));
+    CHECK_NOTHROW(ambassador.coup(duke));
+    CHECK_NOTHROW(assassin.coup(ambassador)); /*Assassin can do it for 3 if he doesn't have 7 coins*/
+    CHECK(assassin.coins() == 0);
+    CHECK(game.winner() == "Yossi");
 }
